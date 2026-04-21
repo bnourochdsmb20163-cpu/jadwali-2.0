@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { moroccoData, subjectsData, collegeLevels, highschoolLevels } from '../data/moroccoData';
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3VIaso348tzD48ReHW6_2zC38x_Nk1gYxXgQPSlOllMihiEGwYJZrpWG752WMit2DTA/exec';
+
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIVer8RZMmiQor7vfflqQkgt1Za9l5kgPX7_FKCWjDocxES8uGVQIKvu_auU-t828YiA/exec';
 const STORAGE_KEY = 'jadwali_form_data';
 
 interface FormData { [key: string]: string | number | boolean | string[]; }
