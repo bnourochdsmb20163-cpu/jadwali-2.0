@@ -56,7 +56,7 @@ export default function Contact() {
                 <h3>واتساب</h3>
                 <p>متاح للتواصل السريع — اضغط على الرقم للتواصل مباشرة</p>
                 <a href={WHATSAPP_LINK} className="contact-link" target="_blank" rel="noopener noreferrer">
-                  +212 651011102
+                  0651011102
                 </a>
               </div>
 
