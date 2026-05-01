@@ -590,7 +590,7 @@ export default function Services() {
                     <div>
                       <h3 className="step-title">معلومات المؤسسة</h3>
                       <p className="step-desc">أدخل البيانات الأساسية لمؤسستك التعليمية</p>
-                      <h2> يمكنك نسخ المعطيات المدخلة في الخطوة 11</h2>
+                      <h3> يمكنك نسخ المعطيات المدخلة في الخطوة 11</h3>
                     </div>
                   </div>
                   <div className="form-grid">
