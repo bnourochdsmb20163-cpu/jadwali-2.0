@@ -3,8 +3,12 @@ import { useState } from 'react';
 const WHATSAPP_NUMBER = '212651011102';
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 
+// رابط Google Script الخاص بورقة الرسائل فقط
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZKqexIDBhO4TjlI6_rUDs3DhSed1DH8oLQpr4DYyNMxicbnDTPFejZTCgNSeK6i_A/exec';
+
 export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -13,28 +17,55 @@ export default function Contact() {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setShowSuccess(true);
-    setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
+    setIsSubmitting(true);
+    
+    const submitData = {
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+      timestamp: new Date().toISOString(),
+    };
+    
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(submitData),
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+      });
+      
+      setShowSuccess(true);
+      setFormData({ name: '', phone: '', email: '', subject: '', message: '' });
+      
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('حدث خطأ في إرسال رسالتك. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  // باقي الكود كما هو...
   const faqs = [
     {
       question: "ما هو متوسط وقت إنجاز استعمال الزمن؟",
-      answer: "متوسط وقت الإنجاز هو 48 ساعة من استلام جميع المعطيات المطلوبة. قد يختلف الوقت حسب تعقيد المؤسسة."
+      answer: "متوسط وقت الإنجاز هو 48 ساعة من استلام جميع المعطيات المطلوبة."
     },
     {
       question: "هل يمكن تعديل استعمال الزمن بعد الإنتاج؟",
-      answer: "نعم، نقدم مواكبة مجانية طوال السنة الدراسية لأي تعديلات طارئة مثل انتقال الأساتذة."
+      answer: "نعم، نقدم مواكبة مجانية طوال السنة الدراسية لأي تعديلات طارئة."
     },
     {
       question: "ما هي طرق الدفع المتاحة؟",
-      answer: "نقبل الدفع عبر التحويل البنكي أو عبر وكالات تحويل الأموال (وفاكاش، كاش بلوس...). يتم الدفع على دفعتين: 50% مقدماً و50% عند التسليم."
+      answer: "نقبل الدفع عبر التحويل البنكي أو عبر وكالات تحويل الأموال."
     },
     {
       question: "هل تدعمون المؤسسات خارج المغرب؟",
-      answer: "حالياً نركز على المؤسسات التعليمية المغربية فقط، لكننا ندرس إمكانية التوسع مستقبلاً."
+      answer: "حالياً نركز على المؤسسات التعليمية المغربية فقط."
     }
   ];
 
@@ -97,6 +128,7 @@ export default function Contact() {
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="أدخل اسمك"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div className="form-group">
@@ -107,6 +139,7 @@ export default function Contact() {
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="أدخل رقم هاتفك"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div className="form-group full-width">
@@ -116,6 +149,7 @@ export default function Contact() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="example@gmail.com"
+                      disabled={isSubmitting}
                     />
                   </div>
                   <div className="form-group full-width">
@@ -124,6 +158,7 @@ export default function Contact() {
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       required
+                      disabled={isSubmitting}
                     >
                       <option value="">— اختر الموضوع —</option>
                       <option value="inquiry">استفسار عام</option>
@@ -141,14 +176,17 @@ export default function Contact() {
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="اكتب رسالتك هنا..."
                       required
+                      disabled={isSubmitting}
                     ></textarea>
                   </div>
                 </div>
-                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}>
-                  إرسال الرسالة
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                  </svg>
+                <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }} disabled={isSubmitting}>
+                  {isSubmitting ? 'جاري الإرسال...' : 'إرسال الرسالة'}
+                  {!isSubmitting && (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                  )}
                 </button>
               </form>
             </div>
