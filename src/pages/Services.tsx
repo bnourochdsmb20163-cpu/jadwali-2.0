@@ -251,7 +251,7 @@ export default function Services() {
     if (institutionTypes.includes('college')) price += 600;
     if (institutionTypes.includes('college-pioneer')) price += 700;
     if (institutionTypes.includes('highschool')) price += 700;
-    if (serviceType === 'edit') price += 100;
+    //if (serviceType === 'edit') price += 100;
     if (serviceType === 'special') price += 150;
     setPricingEstimate(price);
   }, [institutionTypes, serviceType]);
@@ -430,7 +430,7 @@ export default function Services() {
     if (formData.additionalNotes) lines.push(`• ملاحظات إضافية: ${formData.additionalNotes}`);
     if (supportFilesLinks) lines.push(`• روابط الملفات الداعمة: ${supportFilesLinks}`);
     lines.push('');
-    lines.push('💰 التسعيرة التقديرية:');
+        lines.push('💰 التسعيرة التقديرية:');
     lines.push(`• ${pricingEstimate} درهم`);
     lines.push('');
     lines.push('💳 وسيلة الدفع:');
@@ -440,24 +440,8 @@ export default function Services() {
     return lines.join('\n');
   };
 
-  const handleCopyReview = async () => {
-    const text = buildReviewData();
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('تم نسخ جميع المعلومات بنجاح! يمكنك الآن لصقها في واتساب.');
-    } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      alert('تم نسخ جميع المعلومات بنجاح! يمكنك الآن لصقها في واتساب.');
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // ===== دالة إرسال البيانات إلى Google Sheet =====
+  const sendDataToGoogleSheet = async (showSuccessModal: boolean) => {
     const allSubjectsList = [...subjectsData, ...customSubjects];
     const selectedSubjectsNames = selectedSubjectsIds.map(id => allSubjectsList.find(s => s.id === id)?.name || id).join(', ');
     const customSubjectsNames = customSubjects.map(s => s.name).join(', ');
@@ -507,17 +491,50 @@ export default function Services() {
         headers: { 'Content-Type': 'application/json' },
         mode: 'no-cors',
       });
+      console.log('Data sent successfully');
     } catch (error) {
       console.error('Submit error:', error);
     }
+    
     localStorage.removeItem(STORAGE_KEY);
-    setShowSuccess(true);
+    
+    if (showSuccessModal) {
+      setShowSuccess(true);
+    }
+  };
+
+  // ===== دالة نسخ البيانات وإرسالها (بدون نافذة نجاح) =====
+  const handleCopyReview = async () => {
+    const text = buildReviewData();
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('📋 تم نسخ جميع المعلومات بنجاح! يمكنك الآن لصقها في واتساب.');
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('📋 تم نسخ جميع المعلومات بنجاح! يمكنك الآن لصقها في واتساب.');
+    }
+    
+    // إرسال البيانات إلى Google Sheet بدون إظهار نافذة النجاح
+    await sendDataToGoogleSheet(false);
+  };
+
+  // ===== دالة إرسال الطلب (مع نافذة نجاح) =====
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // إرسال البيانات مع إظهار نافذة النجاح
+    await sendDataToGoogleSheet(true);
   };
 
   const getProvinces = () => {
     if (!selectedRegion || selectedRegion === 'other') return [];
     return Object.keys(moroccoData[selectedRegion as keyof typeof moroccoData] || {});
   };
+  
   const getCommunes = () => {
     if (!selectedRegion || !selectedProvince || selectedProvince === 'other') return [];
     const regionData = moroccoData[selectedRegion as keyof typeof moroccoData];
@@ -573,6 +590,7 @@ export default function Services() {
                     <div>
                       <h3 className="step-title">معلومات المؤسسة</h3>
                       <p className="step-desc">أدخل البيانات الأساسية لمؤسستك التعليمية</p>
+                      <h2> يمكنك نسخ المعطيات المدخلة في الخطوة 11</h2>
                     </div>
                   </div>
                   <div className="form-grid">
@@ -649,12 +667,12 @@ export default function Services() {
                     <div className="step-num">03</div>
                     <div>
                       <h3 className="step-title">البنية التربوية</h3>
-                      <p className="step-desc">حدد عدد الأقسام لكل مستوى دراسي والمسار الدولي</p>
+                      <p className="step-desc">حدد عدد الأقسام لكل مستوى دراسي </p>
                     </div>
                   </div>
                   {(institutionTypes.includes('college') || institutionTypes.includes('college-pioneer')) && (
                     <div className="structure-section">
-                      <h4 className="structure-title">🏫 البنية الإعدادية</h4>
+                      <h4 className="structure-title">🏫 بنية الإعدادي</h4>
                       <div className="form-grid">
                         {collegeLevels.map(level => (
                           <div className="form-group" key={level.id}>
@@ -678,7 +696,7 @@ export default function Services() {
                   )}
                   {institutionTypes.includes('highschool') && (
                     <div className="structure-section" style={{ marginTop: '2rem' }}>
-                      <h4 className="structure-title">🎓 البنية الثانوية التأهيلية</h4>
+                      <h4 className="structure-title">🎓 بنية الثانوي التأهيلي</h4>
                       {highschoolLevels.map((level, idx) => (
                         <div className="level-block" key={level.id}>
                           <div className={`level-label ${idx < 3 ? 'lb-blue' : idx < 6 ? 'lb-green' : 'lb-red'}`}>{level.name}</div>
@@ -716,7 +734,7 @@ export default function Services() {
                     <div className="step-num">04</div>
                     <div>
                       <h3 className="step-title">المواد الدراسية</h3>
-                      <p className="step-desc">حدد المواد المدرَّسة في المؤسسة (تم إزالة عدد الأساتذة — سيتم التعامل برموز)</p>
+                      <p className="step-desc">حدد المواد المدرَّسة في المؤسسة</p>
                     </div>
                   </div>
                   <div className="subjects-note"><p>💡 سيتم إنشاء استعمال الزمن باستخدام رموز الأساتذة مثل: AR1, AR2, FR1… ويمكن تغييرها لاحقًا إلى الأسماء.</p></div>
@@ -757,10 +775,10 @@ export default function Services() {
                   </div>
                   <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
                     <h4 className="sub-section-title">🏷️ أسماء القاعات والمرافق</h4>
-                    {generalRoomsCount > 0 && <div className="form-group"><label>📚 أسماء وأرقام القاعات العامة ({generalRoomsCount} قاعة) — اكتبها مفصولة بفواصل أو كل قاعة في سطر</label><textarea rows={3} placeholder="مثال: قاعة 1، قاعة 2، قاعة 3..." value={generalRoomNamesText} onChange={(e) => setGeneralRoomNamesText(e.target.value)} /></div>}
-                    {scienceRoomsCount > 0 && <div className="form-group"><label>🔬 أسماء وأرقام المختبرات العلمية ({scienceRoomsCount} مختبر) — اكتبها مفصولة بفواصل أو كل مختبر في سطر</label><textarea rows={3} placeholder="مثال: مختبر الفيزياء، مختبر الكيمياء..." value={scienceRoomNamesText} onChange={(e) => setScienceRoomNamesText(e.target.value)} /></div>}
-                    {computerRoomsCount > 0 && <div className="form-group"><label>💻 أسماء وأرقام قاعات الإعلاميات ({computerRoomsCount} قاعة) — اكتبها مفصولة بفواصل أو كل قاعة في سطر</label><textarea rows={3} placeholder="مثال: قاعة إعلاميات 1، قاعة إعلاميات 2..." value={computerRoomNamesText} onChange={(e) => setComputerRoomNamesText(e.target.value)} /></div>}
-                    {playgroundCount > 0 && <div className="form-group"><label>⚽ أسماء الملاعب ({playgroundCount} ملعب) — اكتبها مفصولة بفواصل أو كل ملعب في سطر</label><textarea rows={2} placeholder="مثال: الملعب الرئيسي، ملعب التربية البدنية..." value={playgroundNamesText} onChange={(e) => setPlaygroundNamesText(e.target.value)} /></div>}
+                    {generalRoomsCount > 0 && <div className="form-group"><label>📚 أسماء وأرقام القاعات العامة ({generalRoomsCount} قاعة)  </label><textarea rows={3} placeholder="مثال: قاعة من 1 الى 7 ثم من 12 الى 15 ......." value={generalRoomNamesText} onChange={(e) => setGeneralRoomNamesText(e.target.value)} /></div>}
+                    {scienceRoomsCount > 0 && <div className="form-group"><label>🔬 أسماء وأرقام المختبرات العلمية ({scienceRoomsCount} مختبر) </label><textarea rows={3} placeholder="مثال: مختبر pc1 2 svt 3 4..." value={scienceRoomNamesText} onChange={(e) => setScienceRoomNamesText(e.target.value)} /></div>}
+                    {computerRoomsCount > 0 && <div className="form-group"><label>💻 أسماء وأرقام قاعات الإعلاميات ({computerRoomsCount} قاعة) </label><textarea rows={3} placeholder="مثال: قاعة إعلاميات 1، قاعة إعلاميات 2..." value={computerRoomNamesText} onChange={(e) => setComputerRoomNamesText(e.target.value)} /></div>}
+                    {playgroundCount > 0 && <div className="form-group"><label>⚽ أسماء الملاعب ({playgroundCount} ملعب) </label><textarea rows={2} placeholder="مثال: الملعب 1 2 ....." value={playgroundNamesText} onChange={(e) => setPlaygroundNamesText(e.target.value)} /></div>}
                   </div>
                 </div>
               )}
@@ -772,7 +790,7 @@ export default function Services() {
                     <div className="step-num">06</div>
                     <div>
                       <h3 className="step-title">التفويج</h3>
-                      <p className="step-desc">حدد إن كنت تريد تفويج الأقسام للمواد العلمية — تظهر فقط المستويات التي لها أقسام</p>
+                      <p className="step-desc">حدد إن كنت تريد تفويج الأقسام للمواد العلمية و نوع التفويج</p>
                     </div>
                   </div>
                   <div className="grouping-cards">
@@ -789,7 +807,7 @@ export default function Services() {
                               </div>
                               <p className="grouping-label">اختر نوع التفويج:</p>
                               <select name="physicsGroupType" value={physicsGroupType} onChange={(e) => setPhysicsGroupType(e.target.value)} className="num-input" style={{ width: 'auto' }}><option value="2">كل قسم → فوجين</option><option value="3">كل قسمين → ثلاثة أفواج</option></select>
-                              <p className="grouping-label" style={{ marginTop: '1rem' }}><label className="radio-option"><input type="checkbox" name="physicsSVTAdjacency" checked={physicsSVTAdjacency} onChange={(e) => setPhysicsSVTAdjacency(e.target.checked)} /> هل يريد التجاور بين الفيزياء وعلوم الحياة والأرض؟</label></p>
+                              <p className="grouping-label" style={{ marginTop: '1rem' }}><label className="radio-option"><input type="checkbox" name="physicsSVTAdjacency" checked={physicsSVTAdjacency} onChange={(e) => setPhysicsSVTAdjacency(e.target.checked)} /> هل تريد التجاور بين الفيزياء وعلوم الحياة والأرض؟</label></p>
                             </>
                           ) : <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>⚠️ لا توجد مستويات بها أقسام. يرجى العودة للخطوة 3 وإدخال عدد الأقسام أولاً.</p>}
                         </div>
@@ -868,8 +886,8 @@ export default function Services() {
                     <label className={`service-card ${serviceType === 'edit' ? 'selected' : ''}`}><input type="radio" name="serviceType" value="edit" checked={serviceType === 'edit'} onChange={(e) => setServiceType(e.target.value)} /><div className="service-card-inner"><div className="service-icon">✏️</div><div className="service-title">تعديل موجود</div><div className="service-desc">تعديل وتحسين استعمال زمن موجود لديك</div></div></label>
                     <label className={`service-card ${serviceType === 'special' ? 'selected' : ''}`}><input type="radio" name="serviceType" value="special" checked={serviceType === 'special'} onChange={(e) => setServiceType(e.target.value)} /><div className="service-card-inner"><div className="service-icon">🔍</div><div className="service-title">حالة خاصة</div><div className="service-desc">معالجة وضعيات معقدة أو استثنائية</div></div></label>
                   </div>
-                  {serviceType === 'edit' && <div style={{ marginTop: '1.5rem' }}><div className="form-group"><label>رابط الملف (Google Drive أو واتساب)</label><input type="text" name="editFileLink" placeholder="أدخل رابط الملف أو أرسله عبر واتساب" value={editFileLink} onChange={(e) => setEditFileLink(e.target.value)} /></div></div>}
-                  {serviceType === 'special' && <div style={{ marginTop: '1.5rem' }}><div className="form-group"><label>اشرح الحالة الخاصة بالتفصيل</label><textarea name="specialCaseText" rows={5} placeholder="صف الوضعية الخاصة أو الإشكالية التي تواجهها..." value={specialCaseNotes} onChange={(e) => setSpecialCaseNotes(e.target.value)}></textarea></div></div>}
+                  {serviceType === 'edit' && <div style={{ marginTop: '1.5rem' }}><div className="form-group"><label>رابط الملف (Google Drive أو واتساب)</label><input type="text" name="editFileLink" placeholder=" أدخل رابط الملف أو أرسله عبر واتساب او تواصل معنا هاتفيا 0651011102" value={editFileLink} onChange={(e) => setEditFileLink(e.target.value)} /></div></div>}
+                  {serviceType === 'special' && <div style={{ marginTop: '1.5rem' }}><div className="form-group"><label>اشرح الحالة الخاصة بالتفصيل</label><textarea name="specialCaseText" rows={5} placeholder="صف الوضعية الخاصة أو الإشكالية التي تواجهها او تواصل معنا هاتفيا 0651011102..." value={specialCaseNotes} onChange={(e) => setSpecialCaseNotes(e.target.value)}></textarea></div></div>}
                 </div>
               )}
 
@@ -889,7 +907,7 @@ export default function Services() {
                     <div className="form-group"><label>توقيت الدخول مساءً</label><input type="time" name="eveningStart" value={getFormString('eveningStart', '14:00')} onChange={handleInputChange} /></div>
                     <div className="form-group"><label>توقيت الخروج مساءً</label><input type="time" name="eveningEnd" value={getFormString('eveningEnd', '18:00')} onChange={handleInputChange} /></div>
                     <div className="form-group full-width"><label className="toggle-label">هل يعتمد التوقيت المستمر؟</label><div className="toggle-row"><label className="radio-option"><input type="radio" name="continuousTime" value="yes" checked={continuousTime === 'yes'} onChange={(e) => setContinuousTime(e.target.value)} /> نعم</label><label className="radio-option"><input type="radio" name="continuousTime" value="no" checked={continuousTime === 'no'} onChange={(e) => setContinuousTime(e.target.value)} /> لا</label></div></div>
-                    <div className="form-group full-width"><label>أيام أو فترات عدم العمل</label><textarea name="nonWorkDays" rows={2} placeholder="مثال: السبت صباحًا، الجمعة بعد الزوال..." value={getFormString('nonWorkDays')} onChange={handleInputChange}></textarea></div>
+                    <div className="form-group full-width"><label>أيام أو فترات عدم العمل</label><textarea name="nonWorkDays" rows={2} placeholder="مثال: السبت مساء، حسب وضعية المؤسسة..." value={getFormString('nonWorkDays')} onChange={handleInputChange}></textarea></div>
                   </div>
                 </div>
               )}
@@ -935,7 +953,7 @@ export default function Services() {
                       <div className="info-box-icon">🔄</div>
                       <div>
                         <strong>إعادة الإنتاج: 100 درهم</strong>
-                        <p>في حالة الرغبة في إعادة بناء الجدول من الصفر بعد الإنتاج الأول</p>
+                        <p>في حالة الرغبة في إعادة بناء الجدول من الصفر بعد الإنتاج الأول بسبب تغير البنية</p>
                       </div>
                     </div>
                   </div>
@@ -1037,12 +1055,7 @@ export default function Services() {
                           <span className="price-val">{type === 'college' ? '600' : type === 'college-pioneer' ? '700' : '700'} درهم</span>
                         </div>
                       ))}
-                      {serviceType === 'edit' && (
-                        <div className="pricing-item">
-                          <span>تعديل استعمال زمن</span>
-                          <span className="price-val">100 درهم</span>
-                        </div>
-                      )}
+
                       {serviceType === 'special' && (
                         <div className="pricing-item">
                           <span>حالة خاصة</span>
