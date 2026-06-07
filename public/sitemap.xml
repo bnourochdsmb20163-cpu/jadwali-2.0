@@ -15,12 +15,12 @@
 
   <!-- الصفحة الرئيسية -->
   <url>
-    <loc>https://jadwali.ma/</loc>
+    <loc>https://jadwali2.vercel.app/</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://jadwali.ma/og-image.jpg</image:loc>
+      <image:loc>https://jadwali2.vercel.app//og-image.jpg</image:loc>
       <image:title>جدولي - استعمال الزمن المثالي لمؤسستك التعليمية</image:title>
       <image:caption>خدمة متخصصة في إنتاج استعمالات الزمن للمؤسسات التعليمية المغربية</image:caption>
     </image:image>
@@ -28,7 +28,7 @@
 
   <!-- من نحن -->
   <url>
-    <loc>https://jadwali.ma/#/about</loc>
+    <loc>https://jadwali2.vercel.app//#/about</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -36,7 +36,7 @@
 
   <!-- طلب الخدمة -->
   <url>
-    <loc>https://jadwali.ma/#/services</loc>
+    <loc>https://jadwali2.vercel.app//#/services</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -44,7 +44,7 @@
 
   <!-- الاستبيان السريع -->
   <url>
-    <loc>https://jadwali.ma/#/simple-survey</loc>
+    <loc>https://jadwali2.vercel.app//#/simple-survey</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -52,7 +52,7 @@
 
   <!-- نماذج الأعمال -->
   <url>
-    <loc>https://jadwali.ma/#/portfolio</loc>
+    <loc>https://jadwali2.vercel.app//#/portfolio</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -60,7 +60,7 @@
 
   <!-- الأسعار -->
   <url>
-    <loc>https://jadwali.ma/#/pricing</loc>
+    <loc>https://jadwali2.vercel.app//#/pricing</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -68,7 +68,7 @@
 
   <!-- تواصل معنا -->
   <url>
-    <loc>https://jadwali.ma/#/contact</loc>
+    <loc>https://jadwali2.vercel.app//#/contact</loc>
     <lastmod>2026-06-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
