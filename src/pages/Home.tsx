@@ -126,7 +126,7 @@ export default function Home() {
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-num">+50</span>
+              <span className="stat-num">+120</span>
               <span className="stat-label">مؤسسة تعليمية</span>
             </div>
             <div className="stat-divider"></div>
