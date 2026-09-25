@@ -85,8 +85,8 @@ export default function Pricing() {
               <div className="service-item">
                 <div className="service-icon">🔄</div>
                 <h4>إعادة الإنتاج</h4>
-                <p className="service-price">100 درهم</p>
-                <p>إعادة بناء الجدول من الصفر بعد الإنتاج الأول</p>
+                <p className="service-price">150 درهم</p>
+                <p>إعادة بناء الجدول من الصفر بعد الإنتاج الأول بسبب تغير البنية او غيره</p>
               </div>
               <div className="service-item">
                 <div className="service-icon">✏️</div>
