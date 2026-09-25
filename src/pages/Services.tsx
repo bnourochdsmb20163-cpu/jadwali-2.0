@@ -1003,7 +1003,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       <div className="info-box-icon">🔄</div>
                       <div>
                         <strong>إعادة الإنتاج: 150 درهم</strong>
-                        <p>في حالة الرغبة في إعادة بناء الجدول من الصفر بعد الإنتاج الأول</p>
+                        <p>في حالة الرغبة في إعادة بناء الجدول من الصفر بعد الإنتاج الأول بسبب تغير البنية او غيره</p>
                       </div>
                     </div>
                   </div>
