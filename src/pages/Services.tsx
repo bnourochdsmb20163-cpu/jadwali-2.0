@@ -258,7 +258,7 @@ export default function Services() {
     if (institutionTypes.includes('college')) price += 600;
     if (institutionTypes.includes('college-pioneer')) price += 700;
     if (institutionTypes.includes('highschool')) price += 700;
-    if (serviceType === 'edit') price += 100;
+    if (serviceType === 'edit') price += 150;
     if (serviceType === 'special') price += 150;
     setPricingEstimate(price);
   }, [institutionTypes, serviceType]);
@@ -1002,7 +1002,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                     <div className="info-box info-blue">
                       <div className="info-box-icon">🔄</div>
                       <div>
-                        <strong>إعادة الإنتاج: 100 درهم</strong>
+                        <strong>إعادة الإنتاج: 150 درهم</strong>
                         <p>في حالة الرغبة في إعادة بناء الجدول من الصفر بعد الإنتاج الأول</p>
                       </div>
                     </div>
@@ -1108,7 +1108,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       {serviceType === 'edit' && (
                         <div className="pricing-item">
                           <span>تعديل استعمال زمن</span>
-                          <span className="price-val">100 درهم</span>
+                          <span className="price-val">150 درهم</span>
                         </div>
                       )}
                       {serviceType === 'special' && (
