@@ -126,7 +126,7 @@ export default function Home() {
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-num">+120</span>
+              <span className="stat-num">+178</span>
               <span className="stat-label">مؤسسة تعليمية</span>
             </div>
             <div className="stat-divider"></div>
@@ -296,7 +296,7 @@ export default function Home() {
           <div className="pricing-note">
             <span className="note-icon">⚠️</span>
             <p>الأسعار المذكورة تأشيرية. السعر النهائي يتحدد حسب: تعقيد المؤسسة، الشروط الخاصة، ونسبة الإشغال.
-            <strong>إعادة الإنتاج: 100 درهم — المواكبة بعد الإنتاج مجانية طوال السنة.</strong></p>
+            <strong>إعادة الإنتاج: 150 درهم — المواكبة بعد الإنتاج مجانية طوال السنة.</strong></p>
           </div>
         </div>
       </section>
